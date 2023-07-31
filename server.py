@@ -1,6 +1,6 @@
 from fastapi import FastAPI , HTTPException
 from models import Book
-from config import get_books , create_book , get_book , update_book
+from config import get_books, create_book, get_book, update_book, delete_book
 
 app = FastAPI()
 
@@ -51,10 +51,26 @@ def update_existing_book(book_id: str, book: Book):
         if updated_book.modified_count == 1:
             return book
         else:
-            raise HTTPException(status_code=404, detail="Book not found")
+            return {"message": "Book not found"}
     except Exception as e:
         df = {
             "Error_Message": "Something went wrong in the update_existing_book method",
+            "Error" : e.args[0]
+        }
+        raise e
+        return df
+
+@app.delete("/books/{book_id}")
+def delete_existing_book(book_id: str):
+    try:
+        book = delete_book(book_id)
+        if book.deleted_count == 1:
+            return {"message": "Book deleted successfully"}
+        else:
+            return {"message": "Book not found"}
+    except Exception as e:
+        df = {
+            "Error_Message": "Something went wrong in the delete_existing_book method",
             "Error" : e.args[0]
         }
         raise e
