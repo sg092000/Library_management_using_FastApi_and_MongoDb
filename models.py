@@ -14,4 +14,4 @@ class User(BaseModel):
     age: int
     email_id: str
     contact: str
-    books: List[Book] = []
+    books: List[Book] | None = []
