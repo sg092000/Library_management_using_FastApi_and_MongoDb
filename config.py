@@ -32,7 +32,6 @@ def create_book(book: Book):
 def get_book(book_id: str):
     try:
         return books_collection.find_one({"_id": ObjectId(book_id)})
-        # return book
     except Exception as e:
         df = {
             "Error_Message": "Something went wrong in the get_book method",
