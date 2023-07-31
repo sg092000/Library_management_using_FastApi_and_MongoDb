@@ -1,10 +1,11 @@
 from pymongo import MongoClient
-from models import Book
+from models import Book , User
 from bson import ObjectId
 
 client = MongoClient('mongodb://localhost:27017')
 db = client['library_db']
 books_collection = db['books']
+users_collection = db['users']
 
 def get_books():
     try:
@@ -63,3 +64,14 @@ def delete_book(book_id: str):
         raise e
         return df
     
+def create_user(user: User):
+    try:
+        users_collection.insert_one(user.dict())
+        return user
+    except Exception as e:
+        df = {
+            "Error_Message": "Something went wrong in the create_user method",
+            "Error" : e.args[0]
+        }
+        raise e
+        return df

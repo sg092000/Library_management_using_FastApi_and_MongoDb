@@ -1,6 +1,6 @@
 from fastapi import FastAPI , HTTPException
-from models import Book
-from config import get_books, create_book, get_book, update_book, delete_book
+from models import Book , User
+from config import get_books, create_book, get_book, update_book, delete_book , create_user
 
 app = FastAPI()
 
@@ -71,6 +71,18 @@ def delete_existing_book(book_id: str):
     except Exception as e:
         df = {
             "Error_Message": "Something went wrong in the delete_existing_book method",
+            "Error" : e.args[0]
+        }
+        raise e
+        return df
+    
+@app.post("/users/", response_model=User)
+def create_new_user(user: User):
+    try:
+        return create_user(user)
+    except Exception as e:
+        df = {
+            "Error_Message": "Something went wrong in the create_new_user method",
             "Error" : e.args[0]
         }
         raise e
