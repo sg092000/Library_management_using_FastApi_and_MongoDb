@@ -1,6 +1,6 @@
 from fastapi import FastAPI , HTTPException
 from models import Book , User
-from config import get_books, create_book, get_book, update_book, delete_book , create_user , get_users , get_user
+from config import get_books, create_book, get_book, update_book, delete_book , create_user , get_users , get_user , add_book_to_user
 
 app = FastAPI()
 
@@ -11,7 +11,7 @@ def get_all_books():
     except Exception as e:
         df = {
             "Error_Message": "Something went wrong in the get_all_books method",
-            "Error" : e.args[0]
+            "Error" : e
         }
         raise e
         return df
@@ -23,7 +23,7 @@ def create_new_book(book: Book):
     except Exception as e:
         df = {
             "Error_Message": "Something went wrong in the create_new_book method",
-            "Error" : e.args[0]
+            "Error" : e
         }
         raise e
         return df
@@ -39,7 +39,7 @@ def get_single_book(book_id: str):
     except Exception as e:
         df = {
             "Error_Message": "Something went wrong in the get_single_book method",
-            "Error" : e.args[0]
+            "Error" : e
         }
         raise e
         return df
@@ -55,7 +55,7 @@ def update_existing_book(book_id: str, book: Book):
     except Exception as e:
         df = {
             "Error_Message": "Something went wrong in the update_existing_book method",
-            "Error" : e.args[0]
+            "Error" : e
         }
         raise e
         return df
@@ -71,7 +71,7 @@ def delete_existing_book(book_id: str):
     except Exception as e:
         df = {
             "Error_Message": "Something went wrong in the delete_existing_book method",
-            "Error" : e.args[0]
+            "Error" : e
         }
         raise e
         return df
@@ -83,7 +83,7 @@ def create_new_user(user: User):
     except Exception as e:
         df = {
             "Error_Message": "Something went wrong in the create_new_user method",
-            "Error" : e.args[0]
+            "Error" : e
         }
         raise e
         return df
@@ -95,7 +95,7 @@ def get_all_users():
     except Exception as e:
         df = {
             "Error_Message": "Something went wrong in the get_all_users method",
-            "Error" : e.args[0]
+            "Error" : e
         }
         raise e
         return df
@@ -103,15 +103,30 @@ def get_all_users():
 @app.get("/users/{user_id}", response_model=User)
 def get_single_user(user_id: str):
     try:
-        book = get_user(user_id)
-        if book:
-            return book
+        user = get_user(user_id)
+        if user:
+            return user
         else:
-            return {"message" : "Book not found"}
+            raise HTTPException(status_code=404, detail="User not found")
     except Exception as e:
         df = {
             "Error_Message": "Something went wrong in the get_single_user method",
-            "Error" : e.args[0]
+            "Error" : e
+        }
+        raise e
+        return df
+
+@app.put("/users/{user_id}/add_book/{book_id}", response_model=User)
+def add_book_to_user_endpoint(user_id: str, book_id: str):
+    try:
+        if add_book_to_user(user_id, book_id):
+            return get_user(user_id)
+        else:
+            raise HTTPException(status_code=404, detail="Book or User not found")
+    except Exception as e:
+        df = {
+            "Error_Message": "Something went wrong in the add_book_to_user_endpoint method",
+            "Error" : e
         }
         raise e
         return df
