@@ -1,6 +1,6 @@
-from fastapi import FastAPI
+from fastapi import FastAPI , HTTPException
 from models import Book
-from config import get_books , create_book , get_book
+from config import get_books , create_book , get_book , update_book
 
 app = FastAPI()
 
@@ -39,6 +39,22 @@ def get_single_book(book_id: str):
     except Exception as e:
         df = {
             "Error_Message": "Something went wrong in the get_single_book method",
+            "Error" : e.args[0]
+        }
+        raise e
+        return df
+
+@app.put("/books/{book_id}", response_model=Book)
+def update_existing_book(book_id: str, book: Book):
+    try:
+        updated_book = update_book(book_id, book)
+        if updated_book.modified_count == 1:
+            return book
+        else:
+            raise HTTPException(status_code=404, detail="Book not found")
+    except Exception as e:
+        df = {
+            "Error_Message": "Something went wrong in the update_existing_book method",
             "Error" : e.args[0]
         }
         raise e

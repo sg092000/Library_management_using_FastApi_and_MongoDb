@@ -39,3 +39,14 @@ def get_book(book_id: str):
         }
         raise e
         return df
+
+def update_book(book_id: str, book: Book):
+    try:
+        return books_collection.update_one({"_id": ObjectId(book_id)}, {"$set": book.dict()})
+    except Exception as e:
+        df = {
+            "Error_Message": "Something went wrong in the update_book method",
+            "Error" : e.args[0]
+        }
+        raise e
+        return df
