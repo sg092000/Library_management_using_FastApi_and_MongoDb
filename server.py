@@ -67,11 +67,11 @@ def delete_existing_book(book_id: str):
         if book.deleted_count == 1:
             return {"message": "Book deleted successfully"}
         else:
-            return {"message": "Book not found"}
+            raise HTTPException(status_code=404, detail="Book not found")
     except Exception as e:
         df = {
             "Error_Message": "Something went wrong in the delete_existing_book method",
-            "Error" : e.args[0]
+            "Error" : e
         }
         raise e
         return df
