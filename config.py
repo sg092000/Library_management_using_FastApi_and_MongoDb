@@ -50,3 +50,16 @@ def update_book(book_id: str, book: Book):
         }
         raise e
         return df
+
+def delete_book(book_id: str):
+    try:
+        book = books_collection.delete_one({"_id": ObjectId(book_id)})
+        return book
+    except Exception as e:
+        df = {
+            "Error_Message": "Something went wrong in the delete_book method",
+            "Error" : e.args[0]
+        }
+        raise e
+        return df
+    
