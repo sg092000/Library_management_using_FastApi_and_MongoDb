@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from models import Book
-from config import get_books , create_book
+from config import get_books , create_book , get_book
 
 app = FastAPI()
 
@@ -26,4 +26,20 @@ def create_new_book(book: Book):
             "Error" : e.args[0]
         }
         raise e
-        return df  
+        return df
+        
+@app.get("/books/{book_id}", response_model=Book)
+def get_single_book(book_id: str):
+    try:
+        book = get_book(book_id)
+        if book:
+            return book
+        else:
+            raise HTTPException(status_code=404, detail="Book not found")
+    except Exception as e:
+        df = {
+            "Error_Message": "Something went wrong in the get_single_book method",
+            "Error" : e.args[0]
+        }
+        raise e
+        return df

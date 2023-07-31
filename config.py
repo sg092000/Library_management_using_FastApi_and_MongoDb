@@ -1,5 +1,6 @@
 from pymongo import MongoClient
 from models import Book
+from bson import ObjectId
 
 client = MongoClient('mongodb://localhost:27017')
 db = client['library_db']
@@ -23,6 +24,18 @@ def create_book(book: Book):
     except Exception as e:
         df = {
             "Error_Message": "Something went wrong in the create_book method",
+            "Error" : e.args[0]
+        }
+        raise e
+        return df
+
+def get_book(book_id: str):
+    try:
+        return books_collection.find_one({"_id": ObjectId(book_id)})
+        # return book
+    except Exception as e:
+        df = {
+            "Error_Message": "Something went wrong in the get_book method",
             "Error" : e.args[0]
         }
         raise e
