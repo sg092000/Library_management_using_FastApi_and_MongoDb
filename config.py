@@ -15,3 +15,15 @@ def get_books():
         }
         raise e
         return df
+
+def create_book(book: Book):
+    try:
+        books_collection.insert_one(book.dict())
+        return book
+    except Exception as e:
+        df = {
+            "Error_Message": "Something went wrong in the create_book method",
+            "Error" : e.args[0]
+        }
+        raise e
+        return df
