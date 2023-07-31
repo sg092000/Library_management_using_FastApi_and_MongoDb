@@ -75,3 +75,14 @@ def create_user(user: User):
         }
         raise e
         return df
+
+def get_users():
+    try:
+        return list(users_collection.find())
+    except Exception as e:
+        df = {
+            "Error_Message": "Something went wrong in the get_users method",
+            "Error" : e.args[0]
+        }
+        raise e
+        return df

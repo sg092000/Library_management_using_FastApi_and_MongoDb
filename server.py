@@ -1,6 +1,6 @@
 from fastapi import FastAPI , HTTPException
 from models import Book , User
-from config import get_books, create_book, get_book, update_book, delete_book , create_user
+from config import get_books, create_book, get_book, update_book, delete_book , create_user , get_users
 
 app = FastAPI()
 
@@ -83,6 +83,18 @@ def create_new_user(user: User):
     except Exception as e:
         df = {
             "Error_Message": "Something went wrong in the create_new_user method",
+            "Error" : e.args[0]
+        }
+        raise e
+        return df
+
+@app.get("/users/", response_model=list[User])
+def get_all_users():
+    try:
+        return get_users()
+    except Exception as e:
+        df = {
+            "Error_Message": "Something went wrong in the get_all_users method",
             "Error" : e.args[0]
         }
         raise e
