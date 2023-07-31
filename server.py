@@ -1,6 +1,6 @@
 from fastapi import FastAPI , HTTPException
 from models import Book , User
-from config import get_books, create_book, get_book, update_book, delete_book , create_user , get_users
+from config import get_books, create_book, get_book, update_book, delete_book , create_user , get_users , get_user
 
 app = FastAPI()
 
@@ -95,6 +95,22 @@ def get_all_users():
     except Exception as e:
         df = {
             "Error_Message": "Something went wrong in the get_all_users method",
+            "Error" : e.args[0]
+        }
+        raise e
+        return df
+
+@app.get("/users/{user_id}", response_model=User)
+def get_single_user(user_id: str):
+    try:
+        book = get_user(user_id)
+        if book:
+            return book
+        else:
+            return {"message" : "Book not found"}
+    except Exception as e:
+        df = {
+            "Error_Message": "Something went wrong in the get_single_user method",
             "Error" : e.args[0]
         }
         raise e

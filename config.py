@@ -86,3 +86,14 @@ def get_users():
         }
         raise e
         return df
+
+def get_user(user_id: str):
+    try:
+        return users_collection.find_one({"_id": ObjectId(user_id)})
+    except Exception as e:
+        df = {
+            "Error_Message": "Something went wrong in the get_user method",
+            "Error" : e.args[0]
+        }
+        raise e
+        return df
