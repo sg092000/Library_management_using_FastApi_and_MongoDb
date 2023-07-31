@@ -55,7 +55,7 @@ def update_existing_book(book_id: str, book: Book):
     except Exception as e:
         df = {
             "Error_Message": "Something went wrong in the update_existing_book method",
-            "Error" : e.args[0]
+            "Error" : e
         }
         raise e
         return df
