@@ -54,8 +54,18 @@ def update_book(book_id: str, book: Book):
 
 def delete_book(book_id: str):
     try:
-        book = books_collection.delete_one({"_id": ObjectId(book_id)})
-        return book
+        book = get_book(book_id)
+        if not book:
+            raise HTTPException(status_code=404, detail="Book not found")
+
+        users_collection.update_many({}, {"$pull": {"books": {"_id": ObjectId(book_id)}}})
+
+        deleted_book = books_collection.delete_one({"_id": ObjectId(book_id)})
+        print("deleted_book = ", deleted_book)
+        if deleted_book.deleted_count == 1:
+            return {"message": "Book deleted successfully"}
+        else:
+            raise HTTPException(status_code=404, detail="Book not found")
     except Exception as e:
         df = {
             "Error_Message": "Something went wrong in the delete_book method",
