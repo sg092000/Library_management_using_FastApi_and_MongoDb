@@ -1,8 +1,13 @@
 from fastapi import FastAPI , HTTPException
-from models import Book , User
+from models import Book, User
+from fastapi.openapi.docs import get_swagger_ui_html
 from config import get_books, create_book, get_book, update_book, delete_book , create_user , get_users , get_user , add_book_to_user
 
 app = FastAPI()
+
+@app.get("/docs")
+def read_docs():
+    return get_swagger_ui_html(openapi_url="/openapi.json")
 
 @app.get("/books/", response_model=list[Book])
 def get_all_books():
